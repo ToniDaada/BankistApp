@@ -57,7 +57,6 @@ const inputClosePin = document.querySelector('.form__input--pin');
 
 /////////////////////////////////////////////////
 // Functions
-
 const displayMovements = function (movements) {
   containerMovements.innerHTML = ``;
 
@@ -76,9 +75,44 @@ const displayMovements = function (movements) {
     containerMovements.insertAdjacentHTML('afterbegin', html);
   });
 };
-
 displayMovements(account1.movements);
+const calcPrintBalance = function (movements) {
+  const balance = movements.reduce(function (acc, curr) {
+    return acc + curr;
+  });
+  labelBalance.textContent = `${balance} €`;
+};
+calcPrintBalance(account1.movements);
+const calcDisplaySummary = function (movements) {
+  const inflow = movements
+    .filter(value => {
+      return value > 0;
+    })
+    .reduce(function (acc, curr) {
+      return acc + curr;
+    }, 0);
+  labelSumIn.textContent = `${inflow}€`;
 
+  const outflow = movements
+    .filter(value => {
+      return value < 0;
+    })
+    .reduce(function (acc, curr) {
+      return acc + curr;
+    }, 0);
+  labelSumOut.textContent = `${Math.abs(outflow)}€`;
+
+  const interest = movements
+    .filter(mov => mov > 0)
+    .map(mov => (mov * 1.2) / 100)
+    .filter(mov => mov >= 1)
+    .reduce((acc, mov) => acc + mov);
+
+  labelSumInterest.textContent = `${interest}€`;
+  return outflow, inflow, interest;
+};
+
+calcDisplaySummary(account1.movements);
 const createUserName = function (account) {
   account.forEach(function (acc) {
     acc.username = acc.owner
@@ -91,35 +125,4 @@ const createUserName = function (account) {
 
 createUserName(accounts);
 
-const calcPrintBalance = function (movements) {
-  const balance = movements.reduce(function (acc, curr) {
-    return acc + curr;
-  });
-  labelBalance.textContent = `${balance} €`;
-};
-const calcInflow = function (movements) {
-  const inflow = movements
-    .filter(value => {
-      return value > 0;
-    })
-    .reduce(function (acc, curr) {
-      return acc + curr;
-    }, 0);
-  labelSumIn.textContent = Math.abs(inflow);
-  return inflow;
-};
-const calcOutflow = function (movements) {
-  const outflow = movements
-    .filter(value => {
-      return value < 0;
-    })
-    .reduce(function (acc, curr) {
-      return acc + curr;
-    }, 0);
-  labelSumOut.textContent = Math.abs(outflow);
-  return outflow;
-};
-
-calcInflow(account1.movements);
-calcOutflow(account1.movements);
-calcPrintBalance(account1.movements);
+//
