@@ -20,7 +20,7 @@ const account3 = {
 };
 
 const account4 = {
-  owner: 'Ogunyemi Subomi',
+  owner: 'Subomi Ogunyemi',
   movements: [430, 1000, 700, 50, 90],
   interestRate: 1,
   pin: 4444,
@@ -75,14 +75,14 @@ const displayMovements = function (movements) {
     containerMovements.insertAdjacentHTML('afterbegin', html);
   });
 };
-displayMovements(account1.movements);
+
 const calcPrintBalance = function (movements) {
   const balance = movements.reduce(function (acc, curr) {
     return acc + curr;
   });
   labelBalance.textContent = `${balance} €`;
 };
-calcPrintBalance(account1.movements);
+
 const calcDisplaySummary = function (movements) {
   const inflow = movements
     .filter(value => {
@@ -112,7 +112,6 @@ const calcDisplaySummary = function (movements) {
   return outflow, inflow, interest;
 };
 
-calcDisplaySummary(account1.movements);
 const createUserName = function (account) {
   account.forEach(function (acc) {
     acc.username = acc.owner
@@ -124,5 +123,30 @@ const createUserName = function (account) {
 };
 
 createUserName(accounts);
+// Implementing Login Feature
+let currentAccount, currentAccountPin;
 
-//
+btnLogin.addEventListener('click', function (e) {
+  // Prevent form from submitting
+  e.preventDefault();
+  currentAccount = accounts.find(
+    acc => acc.username === inputLoginUsername.value
+  );
+  console.log(currentAccount);
+
+  if (currentAccount?.pin === Number(inputLoginPin.value)) {
+    // Display UI and message
+    labelWelcome.textContent = `Welcome back, ${
+      currentAccount.owner.split(' ')[0]
+    }!`;
+    containerApp.style.opacity = 100;
+    // Display movements
+    displayMovements(currentAccount.movements);
+    // Display balance
+    calcPrintBalance(currentAccount.movements);
+    // Display summary
+    calcDisplaySummary(currentAccount.movements);
+  } else {
+    alert(`Username or password doesn't exist`);
+  }
+});
