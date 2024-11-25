@@ -243,12 +243,19 @@ btnClose.addEventListener('click', function (e) {
 
 // Handling the sorting of account event
 let sorted = false;
-btnSort.addEventListener('click', function () {
+btnSort.addEventListener('click', function (e) {
+  e.preventDefault();
   if (!sorted) {
-    displayMovements(currentAccount.movements, true);
-    sorted = true;
+    displayMovements(currentAccount.movements, sorted);
+    btnSort.innerHTML = `
+   <button class="btn--sort">&uparrow; SORT</button>
+  `;
+    sorted = !sorted;
   } else {
-    displayMovements(currentAccount.movements, false);
-    sorted = false;
+    displayMovements(currentAccount.movements, sorted);
+    btnSort.innerHTML = `
+   <button class="btn--sort">&downarrow; SORT</button>
+  `;
+    sorted = !sorted;
   }
 });
