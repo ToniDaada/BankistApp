@@ -57,10 +57,12 @@ const inputClosePin = document.querySelector('.form__input--pin');
 
 /////////////////////////////////////////////////
 // Functions
-const displayMovements = function (movements) {
+const displayMovements = function (movements, sort = false) {
   containerMovements.innerHTML = ``;
 
-  movements.forEach(function (value, index) {
+  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+
+  movs.forEach(function (value, index) {
     const type = value > 0 ? `deposit` : `withdrawal`;
 
     const html = `
@@ -193,7 +195,15 @@ btnTransfer.addEventListener('click', function (e) {
 btnLoan.addEventListener('click', function (e) {
   e.preventDefault();
   const amount = Number(inputLoanAmount.value);
-  if (amount > 0 && currentAccount.movements.some(acc => acc >= acc * 0.1)) {
+  if (
+    amount > 0 &&
+    // FIXME
+    // Unfortunately users can cheat the alogrithm by getting loans for more than they deserve. I dont know how to do that yet tbh
+    // So TODO : I need to work on that
+    currentAccount.movements
+      .filter(acc => acc > 0)
+      .every(acc => acc >= acc * 0.1)
+  ) {
     currentAccount.movements.push(amount);
     UpdateUI(currentAccount);
   }
@@ -232,9 +242,13 @@ btnClose.addEventListener('click', function (e) {
 });
 
 // Handling the sorting of account event
-
+let sorted = false;
 btnSort.addEventListener('click', function () {
-  currentAccount.movements.sort((a, b) => a - b);
-
-  UpdateUI(currentAccount);
+  if (!sorted) {
+    displayMovements(currentAccount.movements, true);
+    sorted = true;
+  } else {
+    displayMovements(currentAccount.movements, false);
+    sorted = false;
+  }
 });
