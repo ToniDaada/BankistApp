@@ -134,6 +134,7 @@ createUserName(accounts);
 // Implementing Login Feature
 let currentAccount, currentAccountPin;
 
+// Event Handlers
 btnLogin.addEventListener('click', function (e) {
   // Prevent form from submitting
   e.preventDefault();
@@ -184,8 +185,36 @@ btnTransfer.addEventListener('click', function (e) {
     inputTransferTo.blur();
     inputTransferAmount.blur();
     inputTransferTo.value = inputTransferAmount.value = ``;
+  }
+});
 
-    // UpdateUI(transferTo);
+// Closing the accoount
+btnClose.addEventListener('click', function (e) {
+  e.preventDefault();
+  const deletedAccount = accounts.find(
+    acc => acc.username === inputCloseUsername.value
+  );
+  if (
+    deletedAccount?.username === currentAccount.username &&
+    deletedAccount?.pin === currentAccount.pin
+  ) {
+    const index = accounts.findIndex(
+      acc => acc.username === currentAccount.username
+    );
+    console.log(index);
+    //  Delete Account
+
+    accounts.splice(index, 1);
+    // Hide UI
+
+    containerApp.style.opacity = 0;
+    labelWelcome.textContent = `Goodbye, ${
+      currentAccount.owner.split(' ')[0]
+    }!`;
+
+    inputCloseUsername.value = inputClosePin.value = ``;
+    inputCloseUsername.blur();
+    inputClosePin.blur();
   }
 });
 
