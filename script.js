@@ -166,7 +166,7 @@ btnLogin.addEventListener('click', function (e) {
   }
 });
 
-// Implementing Transfers
+// Handling the Implementing Transfers Event
 btnTransfer.addEventListener('click', function (e) {
   e.preventDefault();
   const amount = Number(inputTransferAmount.value);
@@ -188,7 +188,20 @@ btnTransfer.addEventListener('click', function (e) {
   }
 });
 
-// Closing the accoount
+// Handling the Loaning Event
+
+btnLoan.addEventListener('click', function (e) {
+  e.preventDefault();
+  const amount = Number(inputLoanAmount.value);
+  if (amount > 0 && currentAccount.movements.some(acc => acc >= acc * 0.1)) {
+    currentAccount.movements.push(amount);
+    UpdateUI(currentAccount);
+  }
+  inputLoanAmount.value = ``;
+  inputLoanAmount.blur();
+});
+
+//Handling the Closing of the accoount event
 btnClose.addEventListener('click', function (e) {
   e.preventDefault();
   const deletedAccount = accounts.find(
@@ -218,4 +231,10 @@ btnClose.addEventListener('click', function (e) {
   }
 });
 
-btnSort.addEventListener('click', function () {});
+// Handling the sorting of account event
+
+btnSort.addEventListener('click', function () {
+  currentAccount.movements.sort((a, b) => a - b);
+
+  UpdateUI(currentAccount);
+});
