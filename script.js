@@ -75,16 +75,24 @@ const displayMovements = function (movements) {
     containerMovements.insertAdjacentHTML('afterbegin', html);
   });
 };
-
-const calcPrintBalance = function (movements) {
-  const balance = movements.reduce(function (acc, curr) {
+const UpdateUI = function (acc) {
+  // Display movements
+  // Display balance
+  // Display summary
+  displayMovements(acc.movements);
+  calcDisplaySummary(acc);
+  calcPrintBalance(acc);
+};
+const calcPrintBalance = function (acc) {
+  acc.balance = acc.movements.reduce(function (acc, curr) {
     return acc + curr;
   });
-  labelBalance.textContent = `${balance} €`;
+
+  labelBalance.textContent = `${acc.balance} €`;
 };
 
-const calcDisplaySummary = function (movements) {
-  const inflow = movements
+const calcDisplaySummary = function (acc) {
+  const inflow = acc.movements
     .filter(value => {
       return value > 0;
     })
@@ -93,7 +101,7 @@ const calcDisplaySummary = function (movements) {
     }, 0);
   labelSumIn.textContent = `${inflow}€`;
 
-  const outflow = movements
+  const outflow = acc.movements
     .filter(value => {
       return value < 0;
     })
@@ -102,9 +110,9 @@ const calcDisplaySummary = function (movements) {
     }, 0);
   labelSumOut.textContent = `${Math.abs(outflow)}€`;
 
-  const interest = movements
+  const interest = acc.movements
     .filter(mov => mov > 0)
-    .map(mov => (mov * 1.2) / 100)
+    .map(mov => (mov * acc.interestRate) / 100)
     .filter(mov => mov >= 1)
     .reduce((acc, mov) => acc + mov);
 
@@ -132,8 +140,6 @@ btnLogin.addEventListener('click', function (e) {
   currentAccount = accounts.find(
     acc => acc.username === inputLoginUsername.value
   );
-  console.log(currentAccount);
-
   if (currentAccount?.pin === Number(inputLoginPin.value)) {
     // Display UI and message
     labelWelcome.textContent = `Welcome back, ${
@@ -141,12 +147,46 @@ btnLogin.addEventListener('click', function (e) {
     }!`;
     containerApp.style.opacity = 100;
     // Display movements
-    displayMovements(currentAccount.movements);
     // Display balance
-    calcPrintBalance(currentAccount.movements);
     // Display summary
-    calcDisplaySummary(currentAccount.movements);
+    UpdateUI(currentAccount);
+
+    inputLoginPin.value = ``;
+    inputLoginUsername.value = ``;
+    // To make input fields lose focus
+    // inputLoginPin.blur();
+    inputLoginPin.blur();
+    inputLoginUsername.blur();
   } else {
-    alert(`Username or password doesn't exist`);
+    inputLoginPin.value = ``;
+    inputLoginUsername.value = ``;
+    inputLoginUsername.blur();
+    inputLoginPin.blur();
   }
 });
+
+// Implementing Transfers
+btnTransfer.addEventListener('click', function (e) {
+  e.preventDefault();
+  const amount = Number(inputTransferAmount.value);
+  const transferTo = accounts.find(
+    acc => acc.username === inputTransferTo.value
+  );
+  if (
+    amount > 0 &&
+    transferTo &&
+    currentAccount.balance >= amount &&
+    transferTo?.username !== currentAccount.username
+  ) {
+    currentAccount.movements.push(-amount);
+    transferTo.movements.push(amount);
+    UpdateUI(currentAccount);
+    inputTransferTo.blur();
+    inputTransferAmount.blur();
+    inputTransferTo.value = inputTransferAmount.value = ``;
+
+    // UpdateUI(transferTo);
+  }
+});
+
+btnSort.addEventListener('click', function () {});
