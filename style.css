@@ -295,3 +295,53 @@ h2 {
 .timer {
   font-weight: 600;
 }
+
+/* If you want to add new users */
+
+.signup {
+  text-align: center;
+  width: 90%;
+  margin: 50px auto;
+  padding: 10px;
+  opacity: 100;
+}
+.signup form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.signup > form > input {
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  margin: 10px;
+  border: none;
+
+  font-size: 1.6rem;
+  font-family: inherit;
+  text-align: center;
+  border-radius: 10rem;
+  margin-right: 1rem;
+  color: inherit;
+  border: 1px solid #fff;
+  transition: all 0.3s;
+}
+
+.signup button {
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  margin: 10px;
+  border: none;
+
+  font-size: 1.6rem;
+  font-family: inherit;
+  text-align: center;
+  border-radius: 10rem;
+  margin-right: 1rem;
+  color: inherit;
+  border: 1px solid #fff;
+  transition: all 0.3s;
+  cursor: pointer;
+  background: #fff;
+}

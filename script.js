@@ -119,6 +119,8 @@ const displayMovements = function (movements, sort = false) {
       index + 1
     } ${type}</div>
            <div class="movements__value">${value.toFixed(2)}€</div>
+       
+
           </div>
     
     `;
@@ -214,12 +216,13 @@ btnLogin.addEventListener('click', function (e) {
     inputLoginUsername.blur();
     inputLoginPin.blur();
   }
+  signupApp.style.display = 'none ';
 });
 
 // Handling the Implementing Transfers Event
 btnTransfer.addEventListener('click', function (e) {
   e.preventDefault();
-  const amount = Number(inputTransferAmount.value);
+  const amount = inputTransferAmount.value.toFixed(2);
   const transferTo = accounts.find(
     acc => acc.username === inputTransferTo.value
   );
@@ -307,3 +310,72 @@ btnSort.addEventListener('click', function (e) {
     sorted = !sorted;
   }
 });
+
+// Handling new accounts
+/*
+const signupApp = document.querySelector('.signup');
+
+const btnSignUp = document.querySelector('.form__btn--signup');
+const inputSignUpName = document.querySelector('.signup__input--name');
+const inputSignUpPin = document.querySelector('.signup__input--pin');
+const inputSignUpInterest = document.querySelector('.signup__input--interest');
+const inputSignUpCurrency = document.querySelector('.signup__input--currency');
+const inputSignUpLocale = document.querySelector('.signup__input--locale');
+
+btnSignUp.addEventListener('click', function (e) {
+  e.preventDefault();
+
+  const name = inputSignUpName.value.trim();
+  const pin = Number(inputSignUpPin.value.trim());
+  const interestRate = Number(inputSignUpInterest.value.trim());
+  const currency = inputSignUpCurrency.value.trim();
+  const locale = inputSignUpLocale.value.trim();
+
+  // Validate inputs
+  if (!name || !pin || !interestRate || !currency || !locale) {
+    alert('Please fill all fields!');
+    return;
+  }
+
+  // Check for unique username
+  const usernameExists = accounts.some(
+    acc => acc.owner.toLowerCase() === name.toLowerCase()
+  );
+  if (usernameExists) {
+    alert('Username already exists! Please choose a different name.');
+    return;
+  }
+
+  // Create new account
+  const newAccount = {
+    owner: name,
+    movements: [],
+    interestRate: interestRate,
+    pin: pin,
+    movementsDates: [],
+    currency: currency,
+    locale: locale,
+  };
+
+  // Add username property
+  newAccount.username = name
+    .toLowerCase()
+    .split(' ')
+    .map(value => value.at(0))
+    .join('');
+
+  // Add account to accounts array
+  accounts.push(newAccount);
+
+  // Update UI
+  alert('Sign-up successful! Please log in.');
+
+  // Clear inputs
+  inputSignUpName.value =
+    inputSignUpPin.value =
+    inputSignUpInterest.value =
+    inputSignUpCurrency.value =
+    inputSignUpLocale.value =
+      '';
+});
+*/
