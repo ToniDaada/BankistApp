@@ -9,9 +9,9 @@ const account1 = {
     '2020-01-28T09:15:04.904Z',
     '2020-04-01T10:17:24.185Z',
     '2020-05-08T14:11:59.604Z',
-    '2020-05-27T17:01:17.194Z',
-    '2020-07-11T23:36:17.929Z',
-    '2020-07-12T10:51:36.790Z',
+    '2024-11-23T17:01:17.194Z',
+    '2024-11-25T23:36:17.929Z',
+    '2024-11-26T10:51:36.790Z',
   ],
   currency: 'EUR',
   locale: 'pt-PT', // de-DE
@@ -28,9 +28,9 @@ const account2 = {
     '2020-01-28T09:15:04.904Z',
     '2020-04-01T10:17:24.185Z',
     '2020-05-08T14:11:59.604Z',
-    '2020-05-27T17:01:17.194Z',
-    '2020-07-11T23:36:17.929Z',
-    '2020-07-12T10:51:36.790Z',
+    '2024-11-23T17:01:17.194Z',
+    '2024-11-01T23:36:17.929Z',
+    '2024-11-26T10:51:36.790Z',
   ],
   currency: 'USD',
   locale: 'en-US',
@@ -47,9 +47,9 @@ const account3 = {
     '2020-01-28T09:15:04.904Z',
     '2020-04-01T10:17:24.185Z',
     '2020-05-08T14:11:59.604Z',
-    '2020-05-27T17:01:17.194Z',
-    '2020-07-11T23:36:17.929Z',
-    '2020-07-12T10:51:36.790Z',
+    '2024-11-23T17:01:17.194Z',
+    '2024-11-25T23:36:17.929Z',
+    '2024-11-26T10:51:36.790Z',
   ],
   currency: 'USD',
   locale: 'en-US',
@@ -63,9 +63,9 @@ const account4 = {
   movementsDates: [
     '2019-11-18T21:31:17.178Z',
     '2019-12-23T07:42:02.383Z',
-    '2020-01-28T09:15:04.904Z',
-    '2020-04-01T10:17:24.185Z',
-    '2020-05-08T14:11:59.604Z',
+    '2024-11-23T17:01:17.194Z',
+    '2024-11-25T23:36:17.929Z',
+    '2024-11-26T10:51:36.790Z',
   ],
   currency: 'EUR',
   locale: 'pt-PT', // de-DE
@@ -103,6 +103,26 @@ const inputClosePin = document.querySelector('.form__input--pin');
 /////////////////////////////////////////////////
 
 // Functions
+const formatMovementsDate = function (date) {
+  const calcDaysPassed = (date1, date2) =>
+    Math.floor(Math.abs(date2 - date1) / (1000 * 60 * 60 * 24));
+
+  const daysPassed = calcDaysPassed(new Date(), date);
+  console.log(daysPassed);
+  if (daysPassed === 0) {
+    return `Today`;
+  } else if (daysPassed === 1) {
+    return `Yesterday`;
+  } else if (daysPassed >= 2 && daysPassed <= 7) {
+    return `${daysPassed} days ago`;
+  } else {
+    const day = `${date.getDate()}`.padStart(2, 0);
+    const month = `${date.getMonth() + 1}`.padStart(2, 0);
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  }
+};
+
 const displayMovements = function (acc, sort = false) {
   containerMovements.innerHTML = ``;
 
@@ -114,10 +134,7 @@ const displayMovements = function (acc, sort = false) {
     const type = value > 0 ? `deposit` : `withdrawal`;
 
     const date = new Date(acc.movementsDates[index]);
-    const day = `${date.getDate()}`.padStart(2, 0);
-    const month = `${date.getMonth()}`.padStart(2, 0);
-    const year = date.getFullYear();
-    const displayDate = `${day}/${month}/${year}`;
+    const displayDate = formatMovementsDate(date);
 
     const html = `
     <div class="movements__row">
@@ -237,9 +254,9 @@ btnLogin.addEventListener('click', function (e) {
 });
 
 // FAKE LOGIN
-currentAccount = account1;
-UpdateUI(currentAccount);
-containerApp.style.opacity = 100;
+// currentAccount = account1;
+// UpdateUI(currentAccount);
+// containerApp.style.opacity = 100;
 
 // Handling the Implementing Transfers Event
 btnTransfer.addEventListener('click', function (e) {
@@ -258,8 +275,8 @@ btnTransfer.addEventListener('click', function (e) {
     transferTo.movements.push(amount);
 
     // Adding transfer date
-    currentAccount.movementsDates.push(new Date());
-    transferTo.movementsDates.push(new Date());
+    currentAccount.movementsDates.push(new Date().toISOString());
+    transferTo.movementsDates.push(new Date().toISOString());
 
     UpdateUI(currentAccount);
     inputTransferTo.blur();
@@ -286,8 +303,9 @@ btnLoan.addEventListener('click', function (e) {
     currentAccount.movements.push(amount);
 
     // Adding Loan Date
-    currentAccount.movementsDates.push(new Date());
+    currentAccount.movementsDates.push(new Date().toISOString());
     UpdateUI(currentAccount);
+    console.log(currentAccount.movementsDates);
   }
   inputLoanAmount.value = ``;
   inputLoanAmount.blur();
