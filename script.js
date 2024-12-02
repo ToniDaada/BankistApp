@@ -231,16 +231,21 @@ const createUserName = function (account) {
 
 const startLogOutTimer = function () {
   // Set time to 5 minutes
-  let timer = 120;
+  let timer = 10;
   // Call the timer every second
-  setInterval(function () {
+  const time = setInterval(function () {
     const min = String(Math.trunc(timer / 60)).padStart(2, '0');
     const sec = String(timer % 60).padStart(2, '0');
     labelTimer.textContent = `${min}:${sec}`;
     timer--;
+
+    if (timer === 0) {
+      labelWelcome = `Login to get started`;
+      clearInterval(time);
+      containerApp.style.opacity = 0;
+    }
   }, 1000);
 
-  if (!timer) clearTimeout();
   // In each second, update the timer UI
   // When 0 seconds, stop timer and log out user
 };
