@@ -1,9 +1,12 @@
-This web application was created to simulate a real world bank application transfer between users
+This web application was created to simulate a real world bank application transfer between user accounts.
 There are four users in this bank app.
 
 User1 username : su   User1 pin: 1111
+
 User2 username : td   User2 pin: 2222
+
 User3 username : va   User3 pin: 3333
+
 User4 username : so   User4 pin: 4444
 
 By using JavaScript to define the fucntionalities of the client-side, features such as a difference currencies for different regions, a timer that logs users out after a certain period     and many more.
