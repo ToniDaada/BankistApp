@@ -110,7 +110,7 @@ const formatCurr = function (value, locale, currency) {
   }).format(value.toFixed(5));
 };
 const formatLabelDate = function (currentAccount) {
-  setInterval(() => {
+  const tick = function () {
     const getCurentDate = new Date();
     const options = {
       hour: 'numeric',
@@ -125,7 +125,10 @@ const formatLabelDate = function (currentAccount) {
       currentAccount.locale,
       options
     ).format(getCurentDate);
-  }, 1000);
+  };
+  tick();
+  const dateTimer = setInterval(tick, 1000);
+  return dateTimer;
 };
 const formatMovementsDate = function (date, locale) {
   const calcDaysPassed = (date1, date2) =>
@@ -230,29 +233,34 @@ const createUserName = function (account) {
 ``;
 
 const startLogOutTimer = function () {
-  // Set time to 5 minutes
-  let timer = 10;
-  // Call the timer every second
-  const time = setInterval(function () {
+  const tick = function () {
     const min = String(Math.trunc(timer / 60)).padStart(2, '0');
     const sec = String(timer % 60).padStart(2, '0');
+    // In each second, update the timer UI
     labelTimer.textContent = `${min}:${sec}`;
-    timer--;
 
+    // When 0 seconds, stop timer and log out user
     if (timer === 0) {
-      labelWelcome = `Login to get started`;
       clearInterval(time);
+      labelWelcome.textContent = `Login to get started`;
       containerApp.style.opacity = 0;
     }
-  }, 1000);
+    timer--;
+  };
+  // Set time to 5 minutes
+  let timer = 600;
+  // Call the timer every second
+  tick();
+  const time = setInterval(tick, 1000);
 
-  // In each second, update the timer UI
-  // When 0 seconds, stop timer and log out user
+  return time;
 };
 
 createUserName(accounts);
-// Implementing Login Feature
 // Event Handlers
+
+let currentAccount, time, dateTimer;
+// Implementing Login Feature
 btnLogin.addEventListener('click', function (e) {
   // Prevent form from submitting
   e.preventDefault();
@@ -269,8 +277,11 @@ btnLogin.addEventListener('click', function (e) {
     // Display balance
     // Display summary
     UpdateUI(currentAccount);
-    formatLabelDate(currentAccount);
-    startLogOutTimer();
+
+    if (time) clearInterval(time);
+    if (dateTimer) clearInterval(dateTimer);
+    time = startLogOutTimer();
+    dateTimer = formatLabelDate(currentAccount);
 
     inputLoginPin.value = ``;
     inputLoginUsername.value = ``;
