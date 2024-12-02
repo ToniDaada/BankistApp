@@ -1,5 +1,6 @@
 This web application was created to simulate a real world bank application transfer between users
 There are four users in this bank app.
+
 User1 username : su   User1 pin: 1111
 User2 username : td   User2 pin: 2222
 User3 username : va   User3 pin: 3333
